@@ -1,0 +1,7 @@
+--Observe the two points on the 2D plane, 
+which have the minimum and maximum values ​​of North Latitude (LAT_N) and the minimum and maximum values ​​of West Longitude (LONG_W) in STATION.
+Query the Euclidean Distance between points A and B and format your answer to display  decimal digits.
+--
+select round(sqrt(power(max(lat_n)-min(lat_n),2)
+       +power(max(long_w)-min(long_w),2)),4)
+  from station;
