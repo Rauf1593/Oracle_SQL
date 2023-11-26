@@ -1,0 +1,11 @@
+--Olduğumuz ilin Sentyabrın 1-i tarixindən 40 gün 1 saat aralıqla 3 seminar olacaq. Bunun vaxtlarını təyin edək.
+declare
+	tarix1 date;
+	vaxt interval day to second := '40 01:00:00'
+begin
+	tarix1 := to_date('01.09.' || to_char(sysdate,'yyyy') || '19:00','DD.MM.YYYY HH24:mi');
+
+    dbms_output.put_line('Birinci seminarın tarixi:' || to_char(tarix1, 'dd.mm.yyyy hh24:mi'));
+    dbms_output.put_line('Ikinci seminarın tarixi:' || to_char(tarix1+vaxt, 'dd.mm.yyyy hh24:mi'));
+    dbms_output.put_line('Üçüncü seminarın tarixi:' || to_char(tarix1+vaxt*2, 'dd.mm.yyyy hh24:mi'));
+end;
