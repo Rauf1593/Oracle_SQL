@@ -1,0 +1,16 @@
+VARIABLE b_cem number;
+SET autoprint on
+BEGIN
+    
+    SELECT sum(freight) into :b_cem
+    FROM orders
+    WHERE ship_city = 'Köln';
+    
+END;
+/
+
+SELECT ship_city,SUM(freight)
+FROM orders
+GROUP BY ship_city
+HAVING :b_cem < SUM(freight);
+                
