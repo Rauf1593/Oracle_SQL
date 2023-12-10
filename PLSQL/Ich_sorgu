@@ -1,0 +1,22 @@
+/* Cars table dan daxil etdiyimiz masinin net deyerini tapmaq*/
+SET SERVEROUTPUT ON
+DECLARE
+    v_net_price smallint;
+    v_brand varchar(50) := &brand;
+BEGIN
+    DECLARE
+        v_price smallint;
+        v_discount smallint;
+    BEGIN
+        SELECT 
+            price,
+            discount INTO
+            v_price,
+            v_discount
+        FROM cars
+        WHERE brand = v_brand;
+        
+        v_net_price := v_price-v_discount;
+    END;
+    dbms_output.put_line(v_brand || '''s net price is: ' || v_net_price);
+END;
