@@ -1,0 +1,18 @@
+--SQL Cursorlarla deyishilen setir sayi dondurmek
+
+DECLARE 
+    v_say number;
+BEGIN
+    
+    UPDATE student SET course_name = 'Accountancy and Finance'
+    WHERE course_name = 'Economics';
+    
+    v_say := SQL%ROWCOUNT;
+    
+    IF SQL%FOUND THEN
+        dbms_output.put_line('Güncəllənən sətir sayı: ' || v_say);
+    ELSE
+        dbms_output.put_line('Heç bir sətir güncəllənmədi...');
+    END IF;
+    
+END;
