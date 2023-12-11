@@ -1,0 +1,20 @@
+DECLARE
+    v_tarix date;
+    v_say pls_integer :=0;
+BEGIN
+   
+    v_tarix := to_date('01.01.2024','dd.mm.yyyy');
+    
+    LOOP
+        
+        IF v_tarix !=to_date('26.02.2024','dd.mm.yyyy') THEN
+            v_say :=v_say +1;
+            dbms_output.put_line(v_say || '.Gorus: ' || to_char(v_tarix,'dd.mm.yyyy'));
+        END IF;
+        
+        v_tarix:= v_tarix+14;
+        EXIT WHEN v_say=10;
+        
+    END LOOP;
+    
+END;
