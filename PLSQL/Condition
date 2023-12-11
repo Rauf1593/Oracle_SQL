@@ -1,0 +1,21 @@
+SET SERVEROUTPUT ON;
+DECLARE
+    v_id smallint :=9;
+    v_price cars.price%type;
+    v_deyer varchar2(50);
+
+BEGIN
+   
+    SELECT  price INTO  v_price
+    FROM cars
+    WHERE id=v_id;
+    
+    v_deyer :=
+        CASE
+            WHEN v_price > 5000 AND v_price < 10000 THEN 'Alt:' || v_price*0.1
+            WHEN v_price>10001 AND v_price<100000 THEN 'Orta: ' || v_price*0.3
+            WHEN v_price>100000 THEN 'Luks: ' || v_price*0.6 
+        END;
+    
+    dbms_output.put_line(v_deyer);
+END;
