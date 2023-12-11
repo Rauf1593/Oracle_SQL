@@ -1,0 +1,14 @@
+--While ile faktorialin tapilmasi;
+DECLARE
+    v_fak smallint := &faktorial;
+    v_cavab smallint :=1;
+
+BEGIN
+    
+    WHILE v_fak>0 LOOP
+        v_cavab := v_cavab*v_fak;
+        v_fak:=v_fak-1;
+    END LOOP;
+    
+    dbms_output.put_line(v_cavab);
+END;
