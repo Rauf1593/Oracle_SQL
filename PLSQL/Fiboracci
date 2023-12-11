@@ -1,0 +1,15 @@
+--Dongulerle fiboracci reqemleri yazdirma
+DECLARE
+    v_fib smallint :=1;
+    v_say smallint := &say;
+    v_cem smallint :=0;
+BEGIN
+    
+    WHILE v_say>0 LOOP  
+        v_cem := v_cem+v_fib;
+        v_fib := ABS(v_cem-v_fib);
+        v_say:= v_say-1; 
+        
+        dbms_output.put_line(v_fib);
+    END LOOP;
+END;
