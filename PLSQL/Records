@@ -1,0 +1,27 @@
+SET SERVEROUTPUT ON
+DECLARE
+    TYPE emplo_type IS RECORD
+    ( fname varchar2(20),
+      lname varchar2(20),
+      order_c number,
+      order_s number
+    );
+    
+    empo emplo_type;
+
+BEGIN
+    
+    SELECT e.first_name,
+        e.last_name,
+        COUNT(o.freight),
+        SUM(o.freight) INTO empo
+    FROM employees e
+    JOIN orders o ON e.employee_id=o.employee_id
+    WHERE e.employee_id = 3
+    GROUP BY e.first_name,e.last_name;
+    
+    dbms_output.put_line('Ad: ' || empo.fname);
+    dbms_output.put_line('Soyad: ' || empo.lname);
+    dbms_output.put_line('Satış sayi: ' || empo.order_c);
+    dbms_output.put_line('Satis hecmi: ' || empo.order_s);
+END;
