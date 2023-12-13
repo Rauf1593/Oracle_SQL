@@ -1,0 +1,47 @@
+DECLARE 
+    TYPE stdnt IS TABLE OF varchar2(30)
+    INDEX BY varchar2(30);
+    
+    v_students stdnt;
+    
+    v_c_name varchar2(30);
+    v_name varchar2(30);
+    v_key varchar2(30);
+    
+    v_count pls_integer;
+    v_scount pls_integer :=0;
+    
+BEGIN
+     
+     SELECT COUNT(*) INTO v_count
+     FROM student;
+     
+     FOR i in 1..v_count LOOP
+        
+        SELECT name, course_name
+        INTO v_name, v_c_name
+        FROM student
+        WHERE id=i;
+        
+        v_students(v_name) := v_c_name;
+    
+    END LOOP;
+    
+    v_key := v_students.first;
+     
+     WHILE v_key IS NOT NULL LOOP
+         
+         IF (LOWER(v_students(v_key)) LIKE '%engineer%') THEN
+            
+            dbms_output.put_line(v_key || ': ' || v_students(v_key));
+            v_scount := v_scount +1;
+        
+        END IF;
+        
+        v_key := v_students.next(v_key);
+        
+    END LOOP;
+        
+        
+     dbms_output.put_line(v_scount);
+END;
