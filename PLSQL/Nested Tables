@@ -1,0 +1,27 @@
+DECLARE 
+    TYPE ay_type IS TABLE OF VARCHAR2(20);
+    TYPE gun_type IS TABLE OF pls_integer;
+    
+    ay ay_type;
+    gun gun_type;
+
+BEGIN
+    ay := ay_type('Yan','Fev','Mart','Apr','May','Iyun','Iyul','Avg','Sen','Okt');
+    gun := gun_type(31,28,31,30,31,30,31,31,30,31);
+    
+    ay.extend(2);
+    ay(ay.count-1):= 'Noy';
+    ay(ay.count):= 'Dek';
+    
+    gun.extend(2);
+    gun(gun.count-1):= 30;
+    gun(gun.count):= 31;
+    
+    FOR i IN ay.first..ay.last LOOP
+        
+        dbms_output.put_line(ay(i)||' '||gun(i));
+        
+    END LOOP;
+    
+    
+END;
