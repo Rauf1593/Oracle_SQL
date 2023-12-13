@@ -1,0 +1,41 @@
+SET SERVEROUTPUT ON
+DECLARE
+    TYPE cus_info_type IS RECORD
+    (
+        cus_id customers.customer_id%type,
+        comp_name customers.company_name%type,
+        city customers.city%type
+    );
+    v_cus_info cus_info_type;
+    
+    TYPE cus_type IS VARRAY(3) OF cus_info_type;
+    
+    v_cus cus_type := cus_type();
+    TYPE T_customerid_type IS VARRAY(3) OF VARCHAR2(20);
+    v_customer_ids t_customerid_type := t_customerid_type('BERGS','CACTU','TOMSP');
+
+BEGIN
+     
+     FOR i in v_customer_ids.first..v_customer_ids.last LOOP
+     
+        SELECT customer_id, company_name,city INTO v_cus_info
+        FROM customers
+        WHERE customer_id=v_customer_ids(i);
+        
+        v_cus.extend;
+        v_cus(v_cus.last).cus_id := v_cus_info.cus_id;
+        v_cus(v_cus.last).comp_name := v_cus_info.comp_name;
+        v_cus(v_cus.last).city := v_cus_info.city;   
+        
+     END LOOP;
+     
+     FOR j IN v_cus.first..v_cus.last LOOP
+        
+        dbms_output.put_line(
+            'Customer ID: ' || v_cus(j).cus_id ||
+            ',Company Name: ' || v_cus(j).comp_name ||
+            ',City: ' || v_cus(j).city
+        );
+        
+     END LOOP;
+END;
