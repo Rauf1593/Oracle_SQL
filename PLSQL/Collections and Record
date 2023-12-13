@@ -1,0 +1,33 @@
+SET SERVEROUTPUT ON
+DECLARE
+    TYPE rec IS RECORD
+    (
+        id number,
+        brand varchar2(30),
+        price number,
+        discount number
+    );
+    
+    TYPE arr IS TABLE OF rec
+    INDEX BY pls_integer;
+    
+    v_cars arr;
+    v_count pls_integer;
+BEGIN
+    SELECT COUNT(*) INTO v_count
+    FROM cars;
+    
+    FOR i IN 1..v_count LOOP
+        SELECT id,brand,price, discount
+            INTO v_cars(i)
+        FROM cars
+        WHERE id=i;
+    END LOOP;
+    
+    FOR i IN 1..v_count LOOP
+        dbms_output.put_line('ID: ' || v_cars(i).id
+            || ', Brand: ' || v_cars(i).brand
+            || ', Price: ' || v_cars(i).price
+            || ', Discount: ' || NVL(v_cars(i).discount,0));
+    END LOOP;
+END;
