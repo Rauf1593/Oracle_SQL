@@ -1,0 +1,28 @@
+SET SERVEROUTPUT ON
+DECLARE
+    
+    CURSOR empo IS 
+        SELECT title_of_courtesy, 
+            first_name,
+            last_name,
+            birth_date
+         FROM employees;
+         
+    v_title employees.title_of_courtesy%TYPE;
+    v_fname employees.first_name%TYPE;
+    v_lname employees.last_name%TYPE;
+    v_birth employees.birth_date%TYPE;
+    
+BEGIN
+    
+    OPEN empo;
+    
+    LOOP
+        FETCH empo INTO v_title, v_fname,v_lname, v_birth;
+        EXIT WHEN empo%NOTFOUND;
+        dbms_output.put_line(v_title || v_fname ||' '|| v_lname 
+            || ' ' || v_birth);
+    END LOOP;
+    
+    CLOSE empo;
+END;
