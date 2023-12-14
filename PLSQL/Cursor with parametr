@@ -1,0 +1,22 @@
+DECLARE
+    CURSOR v_student(v_course varchar2) IS
+        SELECT name, gender
+        FROM student
+        WHERE course_name=v_course;
+BEGIN
+    dbms_output.put_line('-----Computer Engineer-----');
+    FOR i IN v_student('Computer Engineer') LOOP
+        dbms_output.put_line(i.name || ', Gender: ' || i.gender);
+        
+        If v_student%rowcount > 2 THEN EXIT; END IF;
+        
+    END LOOP;
+    
+    dbms_output.put_line('-----Computer Science-----');
+    FOR i IN v_student('Computer Science') LOOP
+        dbms_output.put_line(i.name || ', Gender: ' || i.gender);
+        
+        If v_student%rowcount > 2 THEN EXIT; END IF;
+        
+    END LOOP;
+END;
