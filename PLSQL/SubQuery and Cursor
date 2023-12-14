@@ -1,0 +1,21 @@
+DECLARE
+   say pls_integer := 0;
+   
+BEGIN
+    
+    FOR v_product IN (
+        SELECT ps.segment AS segment,
+            COUNT(*) AS cnt
+        FROM product p
+        JOIN product_segment ps ON p.segment_id=ps.id
+        GROUP BY ps.segment
+        )
+        LOOP
+    
+        dbms_output.put_line(v_product.segment ||' : '|| v_product.cnt );
+        say := say+1;
+    END LOOP;
+    
+    dbms_output.put_line('Say: ' || say);
+    
+END;
