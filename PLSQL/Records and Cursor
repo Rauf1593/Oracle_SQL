@@ -1,0 +1,41 @@
+SET SERVEROUTPUT ON
+DECLARE
+    CURSOR car_cur IS
+        SELECT brand,
+            price,
+            NVL(discount,0) AS endirim,
+            price-NVL(discount,0) AS net
+        FROM cars;
+        
+    v_cars car_cur%ROWTYPE;
+    toplam pls_integer := 0;
+    toplam_endirim pls_integer := 0;
+
+BEGIN
+
+    OPEN car_cur;
+        
+        LOOP
+            FETCH car_cur INTO v_cars;
+            EXIT WHEN car_cur%NOTFOUND;
+            
+        toplam := toplam+v_cars.price;
+        toplam_endirim := toplam_endirim + v_cars.endirim;
+        
+        dbms_output.put_line(v_cars.brand
+                            ||', Price: '
+                            || v_cars.price
+                            || ', Endirim: '
+                            || v_cars.endirim
+                            || ', Qiymet: '
+                            || v_cars.net);
+        END LOOP;
+        
+    CLOSE car_cur;
+    
+    dbms_output.put_line('Toplam Qiymet: ' || toplam);
+    dbms_output.put_line('Toplam Endirim: ' || toplam_endirim);
+    
+END;
+
+    
