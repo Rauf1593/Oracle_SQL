@@ -1,0 +1,26 @@
+DECLARE
+    TYPE colors_type IS TABLE OF VARCHAR2(20);
+    
+    v_color colors_type:= colors_type('Blue','Dark Green','Yellow');
+    
+    v_table_color colors.color%TYPE;
+    
+    e_color exception;
+BEGIN
+    FOR i IN v_color.first..v_color.last LOOP
+        BEGIN
+            SELECT color || ' is found in the table.' into v_table_color
+            FROM colors
+            WHERE color=v_color(i);
+            
+            dbms_output.put_line(v_color(i));
+            
+            EXCEPTION
+                WHEN no_data_found THEN
+                    dbms_output.put_line(v_color(i) || ' is not found');
+        
+        END;
+    END LOOP;
+END;
+    
+    
