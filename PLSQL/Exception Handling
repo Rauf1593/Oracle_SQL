@@ -1,0 +1,23 @@
+DECLARE
+    v_budce number := &budce;
+    v_car cars.brand%type:= &brand;
+    
+    v_brand varchar2(20);
+    v_price number;
+    e_car exception;
+    
+BEGIN
+    SELECT brand, price INTO v_brand,v_price
+    FROM cars
+    WHERE brand = v_car;
+    
+    IF v_price>v_budce THEN
+        RAISE e_car;
+    ELSE
+        dbms_output.put_line('Beli, bu masini ala bilersiniz.');
+    END IF;
+    
+    EXCEPTION
+        WHEN e_car THEN
+            dbms_output.put_line('Teessufler olsun ki, budceniz azdir');
+END;
