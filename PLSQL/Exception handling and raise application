@@ -1,0 +1,47 @@
+SET SERVEROUTPUT ON
+DECLARE
+    e_level1 exception;
+    PRAGMA exception_init(e_level1,-20001);
+    
+    e_level2 exception;
+    PRAGMA exception_init(e_level2,-20002);
+    
+    e_level3 exception;
+    PRAGMA exception_init(e_level3,-20003);
+    
+    CURSOR c_product IS 
+        SELECT product_name,
+            unit_price*units_in_stock as stock_price
+        FROM products;
+    v_info varchar2(150);
+  
+BEGIN
+    
+    FOR v_product IN c_product LOOP
+        
+        v_info := v_product.product_name||': '||v_product.stock_price;
+    BEGIN
+            IF v_product.stock_price BETWEEN 2000 AND 3000 THEn
+                --RAISE e_level1;
+                raise_application_error(-20001,'ALarm!!! Stock Price is Level 1: ' ||v_info);
+            ELSIF v_product.stock_price BETWEEN 3000 AND 4000 THEN
+                --RAISE e_level2;
+                raise_application_error(-20002,'ALarm!!! Stock Price is Level 2: ' ||v_info);
+            ELSIF v_product.stock_price>4000 THEN
+                --RAISE e_level3;
+                raise_application_error(-20003,'Critical ALarm!!! Stock Price is Level 3: ' ||v_info);
+            END IF;
+            
+            EXCEPTION
+                WHEN e_level1 THEN
+                    dbms_output.put_line('ALarm!!! Stock Price is Level 1: ' ||v_info);
+                WHEN e_level2 THEN
+                    dbms_output.put_line('ALarm!!! Stock Price is Level 2: ' ||v_info);
+                WHEN e_level3 THEN
+                    dbms_output.put_line(SQLERRM);
+    END;
+    
+    END LOOP;
+
+
+END;
