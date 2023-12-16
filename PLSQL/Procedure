@@ -1,0 +1,24 @@
+SET SERVEROUTPUT ON
+CREATE OR REPLACE PROCEDURE top10_employee(p_ship_via varchar2 )
+IS
+    CURSOR c_employee IS
+       SELECT * FROM (
+            SELECT e.last_name,
+                e.first_name,
+                o.freight
+            FROM orders o
+            JOIN employees e ON o.employee_id=e.employee_id
+            WHERE ship_via=p_ship_via
+            ORDER BY freight desc)
+        WHERE rownum<11;
+BEGIN 
+    
+    FOR v_employee IN c_employee LOOP
+        
+        dbms_output.put_line('İşçi adı: '|| v_employee.first_name);
+        dbms_output.put_line('İşçi soyadı: '|| v_employee.last_name);
+        dbms_output.put_line('Sifaris sayi: '|| v_employee.freight);
+    
+    END LOOP;
+    
+END;
