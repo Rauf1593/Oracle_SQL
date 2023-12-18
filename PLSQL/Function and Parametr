@@ -1,0 +1,21 @@
+CREATE OR REPLACE FUNCTION f_year_sumsales(p_year pls_integer)
+RETURN number
+
+IS
+
+    v_sumsales number := 0;
+
+BEGIN
+    
+    SELECT SUM(unit_price * quantity) INTO v_sumsales
+    FROM order_details
+        INNER JOIN orders using (order_id)
+    WHERE shipped_date IS NOT NULL
+    GROUP BY EXTRACT(YEAR FROM order_date)
+    HAVING EXTRACT(YEAR FROM order_date) = p_year;
+    
+    RETURN v_sumsales;
+    
+END;
+
+SELECT f_year_sumsales(1997) FROM dual;
