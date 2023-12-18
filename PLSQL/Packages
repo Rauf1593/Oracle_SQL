@@ -1,0 +1,92 @@
+SET SERVEROUTPUT ON
+CREATE OR REPLACE PACKAGE pck_order_report AS
+
+PROCEDURE find_good_companys;
+
+END pck_order_report;
+/
+
+CREATE OR REPLACE PACKAGE BODY pck_order_report AS
+
+    --global deyiskenler tanidilir..
+    vgb_category_id pls_integer;
+    TYPE tgb_order_id_type IS VARRAY(3) OF INTEGER;
+    vgb_order_ids tgb_order_id_type := tgb_order_id_type(null,null,null);
+    
+PROCEDURE find_max_category
+IS
+
+BEGIN
+    --Stok qiymeti en boyuk miqdara sahib kateqoirya
+    SELECT category_id into vgb_category_id
+    FROM (
+        SELECT category_id,
+            unit_price*units_in_stock AS stock_price
+        FROM products
+        ORDER BY 2 desc
+        )
+    WHERE rownum=1;
+    dbms_output.put_line('Category ID: '||vgb_category_id);
+    
+END;
+
+PROCEDURE find_orders
+IS
+    --Yuxarida tapilan kategoriyadaki en yuksek satis miqdarli ilk 3 sifarisi tapmaq
+    CURSOR crs_orders IS
+        SELECT rownum, order_id
+        FROM (
+            SELECT order_id, unit_price*quantity
+            FROM order_details od
+            WHERE od.product_id IN
+                (
+                SELECT product_id
+                FROM products
+                WHERE category_id = vgb_category_id
+                )
+            ORDER BY 2 desc
+            )
+        WHERE rownum <4;
+BEGIN
+    
+    --Tapilan her sifaris id deger, varraya elave olunur
+    for crs_row IN crs_orders LOOP
+        vgb_order_ids(crs_row.rownum):= crs_row.order_id;
+        dbms_output.put_line('Order ID: '|| crs_row.order_id);
+    END LOOP;
+    
+END;
+    
+PROCEDURE find_companys
+IS
+    --tapilan her bir sifarisi veren sirketleri tapiriq
+    CURSOR crs_company(v_order_id integer) IS
+        SELECT company_name FROM customers c
+        WHERE customer_id in
+        (
+            SELECT customer_id
+            FROM orders
+            WHERE order_id=v_order_id
+        );
+BEGIN
+    
+    FOR i in 1..vgb_order_ids.count LOOP
+        --Tapilan her bir sifaris idi cursora parametr olaraq gondermek
+        FOR crs_row IN crs_company(vgb_order_ids(i)) LOOP
+        
+        dbms_output.put_line('Company name: ' || crs_row.company_name);
+        
+        END LOOP;
+    END LOOP;
+END;
+
+PROCEDURE find_good_companys
+IS
+BEGIN
+    -- Colden cagrilacak ana funksiya
+    find_max_category;
+    find_orders;
+    find_companys;
+END;
+    
+END pck_order_report;
