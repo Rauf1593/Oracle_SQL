@@ -1,0 +1,22 @@
+CREATE OR REPLACE PACKAGE yazma IS
+    PROCEDURE file_yaz(p_file_adi varchar2, p_dic varchar2);
+END yazma;
+
+CREATE OR REPLACE PACKAGE BODY yazma IS
+
+    PROCEDURE file_yaz(p_file_adi varchar2, p_dic varchar2) 
+    IS
+        filex utl_file.file_type;
+        
+    BEGIN
+        
+        filex := utl_file.fopen(p_dic,p_file_adi, 'W');
+        utl_file.put_line(filex, 'Salam');
+        utl_file.fclose(filex);
+        
+    END;
+END yazma;
+
+BEGIN
+    yazma.file_yaz('yoxlamautl.txt', 'YOXLAMA');
+END;
