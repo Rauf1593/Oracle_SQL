@@ -1,0 +1,47 @@
+
+create or replace PACKAGE BODY dml_keep AS
+
+
+    PROCEDURE write_dml_log
+    (
+        p_dml_type varchar2,
+        p_table_name varchar2,
+        p_column_name varchar2,
+        p_column_old_value varchar2,
+        p_column_new_value varchar2
+    )
+    IS
+    
+    BEGIN
+        INSERT INTO table_cars_log(dml_type,table_name,column_name,column_old_value,column_new_value)
+        VALUES(p_dml_type,p_table_name,p_column_name,p_column_old_value,p_column_new_value);
+    END;
+
+END dml_keep;
+
+\
+
+CREATE OR REPLACE TRIGGER trg_cars
+BEFORE UPDATE ON cars
+REFERENCING new as new old as old
+FOR EACH ROW
+
+BEGIN
+    
+    IF updating THEN
+    
+        IF :new.brand <> :old.brand THEN
+            write_dml_log('Update' , 'Cars', 'Brand',:old.brand,:new.brand);
+        END IF;
+        IF :new.price <> :old.price THEN
+            write_dml_log('Update' , 'Cars', 'Price',:old.price,:new.price);
+        END IF;
+        IF :new.discount <> :old.discount THEN
+            write_dml_log('Update' , 'Cars', 'Discount',:old.discount,:new.discount);
+        END IF;
+    
+    END IF;
+END;
+
+
+select * FROM table_cars_log;
