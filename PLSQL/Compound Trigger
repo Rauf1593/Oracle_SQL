@@ -1,0 +1,29 @@
+CREATE OR REPLACE TRIGGER trg_total_discount
+    FOR INSERT OR UPDATE ON product_segment
+    COMPOUND TRIGGER
+
+    v_total_discount number;
+
+    BEFORE STATEMENT IS
+    BEGIN
+        
+        SELECT SUM(discount) INTO v_total_discount
+        FROM product_segment;
+        
+    END BEFORE STATEMENT;
+    
+    BEFORE EACH ROW IS
+    BEGIN
+        IF v_total_discount+ :new.discount - :old.discount >0.25 THEN
+            :new.discount := :old.discount;
+        END IF;
+    
+    END BEFORE EACH ROW;
+
+END;
+/
+
+
+UPDATE product_segment SET discount= discount + 0.05 WHERE id=3;
+
+SELECT * FROM product_segment;
